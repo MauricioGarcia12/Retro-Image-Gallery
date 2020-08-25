@@ -11,7 +11,7 @@ function App() {
 
   //paginador
   const [ paginaactual, guardarPaginaActual]=useState(1);
-  const [totalpaginas,guardarTotalPaginas]=useState(1);
+  const [totalpaginas,guardarTotalPaginas]=useState(17);
 
   useEffect(() => {
     //no haga consulta si esta vacia
@@ -20,7 +20,7 @@ function App() {
    const consultarAPI = async () =>{
     const imagenesPorPagina =30;
     const key ='18026964-37229ebf5f831553df0e61157';
-    const url =`https://pixabay.com/api/?key=${key}&q=${busqueda}&per_page=${imagenesPorPagina}`;
+    const url =`https://pixabay.com/api/?key=${key}&q=${busqueda}&per_page=${imagenesPorPagina}&min_width=${500}&min_height=${500}`;
     
     const respuesta = await fetch(url);
     const resultado = await respuesta.json();
@@ -37,6 +37,23 @@ function App() {
   }, [busqueda])
 
 
+  //definir pagina anterior
+  const paginaAnterior = () =>{
+    const nuevaPaginaActual = paginaactual -1;
+    if(nuevaPaginaActual === 0) return ;
+
+    guardarPaginaActual(nuevaPaginaActual);
+  }
+
+  //definir pagina siguiente
+  const paginaSiguiente = () =>{
+    const nuevaPaginaActual = paginaactual +1;
+
+    if(nuevaPaginaActual>totalpaginas) return;
+    guardarPaginaActual(nuevaPaginaActual);
+  }
+
+
   return (
     <div className='container'>
       <div className='jumbotron'>
@@ -49,6 +66,17 @@ function App() {
           <ListadoImagenes
             imagenes={imagenes}
           />
+          <button
+          className='btn btn-info mr-1'
+          type='button'
+          onClick={paginaAnterior}
+          >&laquo; Anterior </button>
+
+          <button
+          className='btn btn-info mr-1'
+          type='button'
+          onClick={paginaSiguiente}
+          >Siguiente &raquo;</button>
       </div>
     </div>
   );
